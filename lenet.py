@@ -13,6 +13,7 @@ class LeNet(models.Sequential):
         self.add(layers.Conv2D(120, kernel_size=(5, 5), strides=(1, 1), activation='relu', padding='valid'))
         self.add(layers.Flatten())
         self.add(layers.Dense(84, activation='relu'))
+        self.add(layers.Dropout(0.3)) 
         self.add(layers.Dense(nb_classes, activation='softmax'))
 
         self.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
