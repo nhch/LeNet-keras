@@ -6,4 +6,4 @@ def plot_loss(history):
     plt.title('Model Loss')
     plt.ylabel('loss')
     plt.xlabel('epoch')
-    plt.legend(['Train, Test'], loc=0)
+    plt.legend(['Train', 'Test'], loc=0)
