@@ -43,10 +43,15 @@ def main():
     plot_accuracy(hist)
 
     # 4) Valutazione e confusion matrix
+    score = model.evaluate(data.x_test, data.y_test, batch_size=batch_size, verbose=2)
+    print(f'\nTest loss: {score[0]:.4f} - Test accuracy: {score[1]:.4f}')
+
     y_pred = model.predict(data.x_test, batch_size=batch_size)
     y_pred_classes = np.argmax(y_pred, axis=1)
     y_true = np.argmax(data.y_test, axis=1)
     plot_confusion_matrix(y_true, y_pred_classes)
+
+
 
 if __name__ == '__main__':
     main()
