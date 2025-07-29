@@ -8,11 +8,12 @@ from visualizations import (
     plot_loss,
     plot_accuracy,
     plot_confusion_matrix,
+    show_filters
 )
 
 def main():
     batch_size = 128
-    epochs = 25
+    epochs = 5
 
     data = DATA()
     model = LeNet(data.input_shape, data.num_classes)
@@ -42,7 +43,12 @@ def main():
     plot_loss(hist)
     plot_accuracy(hist)
 
-    # 4) Valutazione e confusion matrix
+    # 4) Visualizzazione dei filtri del primo layer
+    show_filters(model, layer_idx=0)
+    show_filters(model, layer_idx=2, max_cols=8)
+    show_filters(model, layer_idx=4, max_cols=12)
+
+    # 5) Valutazione e confusion matrix
     score = model.evaluate(data.x_test, data.y_test, batch_size=batch_size, verbose=2)
     print(f'\nTest loss: {score[0]:.4f} - Test accuracy: {score[1]:.4f}')
 

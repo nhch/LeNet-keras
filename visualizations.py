@@ -29,6 +29,51 @@ def show_samples(x, y, rows: int = 2, cols: int = 5) -> None:
     fig.tight_layout()
     plt.show()
 
+import numpy as np
+import matplotlib.pyplot as plt
+
+def show_filters(model, layer_idx: int = 0, max_cols: int = 8) -> None:
+    """
+    Visualizza i filtri di un layer convoluzionale, evitando di mostrarli tutti su una sola riga.
+
+    Args:
+        model: modello Keras già addestrato.
+        layer_idx: indice del layer Conv2D da visualizzare.
+        max_cols: numero massimo di colonne da usare nel collage.
+    """
+    layer = model.layers[layer_idx]
+    weights = layer.get_weights()[0]              # (h, w, in_ch, out_ch)
+
+    # media sui canali di ingresso
+    weights = weights.mean(axis=2)
+    weights -= weights.min()
+    if weights.max() != 0:
+        weights /= weights.max()
+
+    num_filters = weights.shape[-1]
+
+    # Scegliamo le colonne in modo:
+    #   1. di non superare max_cols
+    #   2. di avere una griglia il più possibile quadrata
+    cols = min(max_cols, int(np.ceil(np.sqrt(num_filters))))
+    rows = int(np.ceil(num_filters / cols))
+
+    fig, axes = plt.subplots(rows, cols, figsize=(cols * 2, rows * 2))
+
+    # Se axes non è una matrice 2-D, normalizziamo per poterlo iterare
+    if rows == 1 and cols == 1:
+        axes = np.array([[axes]])
+    elif rows == 1 or cols == 1:
+        axes = np.expand_dims(axes, 0 if cols == 1 else 1)
+
+    for i, ax in enumerate(axes.flatten()):
+        if i < num_filters:
+            ax.imshow(weights[..., i], cmap="gray")
+        ax.axis("off")
+
+    fig.suptitle(f"Filtri di {layer.name}")
+    fig.tight_layout()
+    plt.show()
 
 def plot_loss(history) -> None:
     """Grafico della funzione di perdita per train e validation."""
